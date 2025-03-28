@@ -1,0 +1,744 @@
+Install Docker on Ubuntu 22:
+=========================
+
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+
+Install Docker 
+
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+systemctl start docker
+
+=====================================================
+Install Docker on Amazon linux 2023:
+======================================================
+sudo yum install -y docker
+sudo yum update -y
+sudo systemctl enable docker
+sudo systemctl start docker
+docker --version
+
+
+============================================================
+
+Docker Images
+=================================================
+
+By Default we will not have images on the docker host machine.
+
+All the images will be available at docker host
+
+Demo1: List images on the dockerHost
+
+# docker images
+
+
+Demo 2: Pull images on the Docker Host
+
+# docker pull ubuntu
+
+Demo 3: pull an Image of a specific tag
+
+# docker pull ubuntu:20.04
+
+Demo 4: See details about image
+
+# docker history ubuntu
+
+# docker history ubuntu:20.04
+
+
+Demo 5: Delete an Image
+
+# docker rmi ubuntu
+# docker rmi ubuntu:20.04
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Docker Image carries it address form where we have to pull it
+
+The image Name will be in the below format:
+
+ registrypath/reponame/Imagename:tagname
+
+docker.io/library/ubuntu:latest
+
+Example:
+===================
+# docker pull ubuntu
+
+# docker pull sonal04/myimage:01
+
+# docker pull awsRegistry/reponame/imagename
+
+# docker pull 172.34.56:5000/repo1/imagename
+
+=====================================
+
+# sudo su -
+
+Demo : Pull an Image and run the image to launch a container.
+
+# docker pull ubuntu 
+
+Run the image to launch a container
+
+# docker run ubuntu
+
+Command to list all the containers
+
+# docker ps -a
+
+Container will be created , will have a name and will have an ID and status will be exited.
+
+Create a container from same image but give a unique name to the container:
+
+# docker run --name cont1 ubuntu
+
+Container will be created , will have a name as cont1 and will have an ID and status will be exited.
+
+Note: When containers are in exited state, docker host will not allocate any CPU or memory to the containers
+
+
+You can check number of resources allocated to container on the host machine using the below command
+
+# docker stats
+
+Press CTRL+c to come out to the terminal.
+
+
+Foreground Mode(-it)
+=========================
+Here:
+
+i= interactive
+t=terminal
+
+With this option:
+  >  A container will be created from the Image
+ > Container will be with status Running
+ > User of the host machine will be attached to the terminal of the container
+
+
+# docker run --name u1 -it ubuntu
+
+Come out of the container and keep it running
+
+# press key CTRL pq
+
+Check status of container:
+
+# docker ps -a
+
+Again attach to the terminal of the Up and running container
+
+# docker attach containername/id
+
+Example: docker attach 525ee7990ca0
+
+Note: You can attach only to the up and running OS image containers
+
+
+Comeout of the container by giving exit signal
+
+# exit
+
+
+You will be on the VM and container status will be Exited.
+
+
+Start an exited container:
+=======================
+
+# docker start containername/id
+
+# docker ps -a
+
+====================================
+Stop a running container 
+
+# docker stop containername
+
+Kill a running container
+
+# docker kill containername
+
+==================================
+Delete containers on the docker host
+
+# docker rm -f $(docker ps -aq)
+
+===================================
+
+Detached Mode: (-d)
+===================================
+With this option:
+  >  A container will be created from the Image
+ > Container will be with status Running
+ > User of the host machine will be detached from the container
+
+# docker run --name web -d nginx
+
+How can we access or attach to the terminal of above container:
+
+# docker exec web uname
+
+Example: docker exec contaienrname command
+
+Docker execute a command on the container.
+
+How can we access or attach to the terminal of nginxcontainer:
+
+# docker exec -it web bash
+
+Give exit to comout of the command
+
+
+Container will still be running
+
+# docker ps
+
+
+Check logs of the container:
+==============================
+
+# docker logs containername
+
+
+Describe the details of the container:
+=========================
+
+# docker inspect containername/id
+
+
+Delete all images and stopped containers
+
+# docker system prune --all
+
+Give y 
+For command to complete.
+
+All stopped container will be deleted
+All images that are dangling(not associated to a container) will be deleted
+
+====================================
+
+Port Mapping/Port forwarding:
+====================================
+
+
+
+
+
+By default as the container is created it is exposed to its target port number .
+You can see the exposed port number on the Image dockerfile
+
+Docker says that as soon as the web container is created it can be accessed on the target port but its the users the internet that cannot reach the container.
+
+So in order to access the container from the browser of the machine we have to do port mapping 
+
+Pls note: 
+Port mapping has to be done at runtime i.e. with docker run command.
+Once a container has been created you cannot do port mapping.
+You will delete the container and recreate the container with port mapping
+Port mapping is done using -p or -P flag
+In port mapping user will give 2 ports which are: VM System port and container target port
+Mapping is done as -p 8989:80
+     8989 : VM port number
+              80: container target port
+If you do not know what port numbers to give while creating the container, then use the flag -P.
+In this case docker will take a random open port on your VM and map it to the container port. 
+       
+
+Demo:
+===============================
+
+Create a container with image as nginx and do port mapping (-p)
+
+# sudo su -
+# systemctl start docker
+
+# docker run -d -p 8989:80 --name web1 nginx
+
+
+# docker ps -a
+
+
+
+
+Go to your browser and give:
+
+ #   http://publicIP:8989
+
+We will see the welcome page of Nginx on the container.
+
+Let us deploy our own html page on the nginx container.
+
+
+For this let us attach to the terminal of the container web1:
+
+# docker exec -it web1 bash
+
+# cd /usr/share/nginx/html
+
+# echo "This is docker session by Sonal Mittal" > index.html
+# exit
+
+Just go to the browser and refresh the nginx page. You will see a new deployment.
+
+
+Create a new container with image as httpd and do port mapping (-P)
+============================
+
+# docker run -d -P --name web2 httpd
+
+# docker ps -a
+
+You will see a new port number mapped to your container
+
+Go to the browser and take public Ip and give new system port
+
+You will apache on the webpage
+
+
+ Dockerfile:
+================================================================
+
+It is a simple file with no extension, it has the name dockerfile or Dockerfile 
+
+No programing or scripting language is used to write this file
+
+We just use keywords given to us by Docker and pass arguments/commands to these keywords
+
+Syntax:  keyword argument/command
+
+# to write comments
+
+1. FROM 
+This is the first keyword in the dockerfile 
+With this keyword we will mention the name of the any Docker Base image over which we want to customization
+
+2. ENV 
+This keyword can be repeated multiple times in the dockerfile
+Using this keyword we will define environment variables and its values
+These variables can further be used in other steps of the dockerfile
+
+3. LABEL
+It is not mandatory, with this we give the key=value. It is like metadata/information about dockerfile 
+
+4. RUN 
+This keyword can be repeated multiple times in the dockerfile 
+With this keyword we will give Linux command to install/upgrade packages
+When a container is launched and you want a set of commands or packages to be laready executed and present on the container
+You can mention that in dockerfile using RUN keyword 
+
+5. COPY 
+Can copy any file from the Docker host on to the containers directory
+However it cannot copy .tar files on the containers
+
+6. ADD 
+Can copy any file from the Docker host on to the containers directory
+can copy .tar files on the container directory 
+
+7. EXPOSE 
+With this keyword we will mention target port of the container 
+
+8. Volume 
+
+With this keyword we will mention the directory of the container that will preserve the data on the host machine
+
+9. CMD
+
+With this keyword we will mention a command that will run after  the container is launched 
+However, this command can be replaced by a new command that is passed by the admin with docker run command
+
+10. ENTRYPOINT
+
+With this keyword we will mention a command that will run after  the container is launched 
+
+However, this command CANNOT be replaced by a new command that is passed by the admin with docker run command
+New command get appended as an argument to the EntryPoint command
+
+11. WORKDIR
+This keyword is written in the beginning of the dockerfile after FROM keyword
+This keyword will create a working directory on the container
+Then rest of dockerfile commands will run in this working directory by default
+============================================
+
+Example:
+============================================
+
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install nginx -y
+COPY index.html /var/www/html/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+build dockerfile into an Image
+
+# docker build -t myimage01 .
+
+# docker images
+
+
+Demo for python dockerfile
+=======================================
+
+# cd
+
+# mkdir mydockerfile1
+
+# cd mydockerfile1
+
+# vim app.py
+
+from flask import Flask 
+import os 
+app = Flask(__name__) 
+@app.route('/') 
+
+def hello(): 
+    return ('\nHello from Container World! \n\n')
+
+if __name__ == "__main__": 
+    app.run(host="0.0.0.0", port=8080, debug=True)
+
+
+Save the file
+
+# vim dockerfile
+
+FROM ubuntu:20.04
+RUN apt update && apt install python3 -y && apt install python3-flask -y
+COPY app.py /tmp
+EXPOSE 8080
+CMD ["python3", "/tmp/app.py"]
+
+
+save the file
+
+# docker build -t myimage01 .
+
+# docker run -d -P myimage01
+
+============================================
+
+Push the image in docker hub
+==================================
+
+From host machine loginto dockerhub
+
+# docker login
+
+username of dockerhub:
+password
+
+Need to chnage name of the image and add repository name where it has to be pushed in docker hub
+
+docker tag oldimageName dockerhubaccountName/imagename
+
+# docker tag myimage01 sonal04/myimage01
+
+Push the image
+
+# docker push sonal04/myimage01
+
+=================================
+Docker-Compose Tool:
+============================
+
+ Whenever we have to deploy multiple container with a single command we will use docker-compose tool
+
+This tool used a file with name as docker-compose.yml
+
+This file is written in YAML which is declarative nature
+
+In the compose file we will  declare below details for multiple microservices, 
+Image details
+Port details
+Volume details
+Network details
+Command details
+
+When the compose file is executed, it will pull the image and create containers one after the other
+
+Using this tool, we can created dependency between containers
+
+Using this tool, we will be able to create multi container and delete all containers
+
+Docker-compose when executed creates a custom bridge network due to which all the container created by docker-compose tool can communicate with each other using container hostname
+
+YAML:
+=====================
+
+YAML stands for Yet another markup langauge or YAML aint a Mark up langauge
+
+YAML is not programming or scripting language.
+
+It is just a format of saving data in a file.
+
+In YAML we save data as key and value pair
+A key can store single value or a list of values
+The file with YAML code should have an extension of yml or YAML
+
+while writing YAML indentation is mandatory.
+
+Syntax in YAML file:
+key: value 
+
+Value can be a:
+ - String
+ - Integer
+ - decimal
+ - Boolean
+
+The key will always be given to us by the tool
+- keys are tool specific 
+
+Value is always given by the admin/user 
+
+a key: value  ==> Map 
+
+Example 1: A key storing single value 
+
+---
+company: StarAgile
+Trainer: SonalMittal
+Training: Docker 
+Days: Weekdays
+Time: 10AM
+...
+
+Example 2: A key storing list of values 
+
+---
+company: Simplilearn
+Trainers: 
+  - SonalMittal
+  - Ravi
+  - John
+  - Rahul
+Trainings: 
+  - Docker 
+  - kubernetes
+  - Ansible
+  - Jenkins
+Days: 
+  - Weekdays
+  - Weekends
+Time: 10AM
+...
+
+Example 3: A key storing list of Maps  
+
+---
+company: Simplilearn
+Trainers: 
+  - name: SonalMittal
+    Email: Sonal@gmail.co
+    phone: 3535446547
+  - name: Ravi
+    email: ravi@gmail.co
+    phone: 43534534546
+
+
+
+Install docker-compose tool:
+*******************************************
+
+curl -SL https://github.com/docker/compose/releases/download/v2.13.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+
+Demo for docker-compose:
+
+# mkdir mycomposefiles
+# cd mycomposefiles
+# vim docker-compose.yml
+
+version: '3'
+
+services:
+ db:
+  image: mysql:5.7
+  restart: always
+  environment:
+   MYSQL_ROOT_PASSWORD: password
+   MYSQL_DATABASE: wordpress
+   MYSQL_USER: wordpress
+   MYSQL_PASSWORD: wordpress
+ Wordpress:
+  depends_on:
+   - db
+  image: wordpress
+  ports:
+   - '8000:80'
+  restart: always
+  environment:
+   WORDPRESS_DB_HOST: db:3306
+   WORDPRESS_DB_USER: wordpress
+   WORDPRESS_DB_PASSWORD: wordpress
+   WORDPRESS_DB_NAME: wordpress
+
+
+
+
+# docker-compose up -d
+# docker-compose ps
+
+GO to the browser of the desktop
+
+ Give  http://localhost:8000
+
+On another browser give -    http://localhost:8181
+
+
+# docker-compose down
+
+===================================
+
+Docker swarm
+===================================================
+
+We need a tool that can create any number of containers from single Image.
+We need a tool that will distribute these containers on multiple VMs that have docker installed on them and they are connected with each other [Cluster].
+We need a tool that can scale up the containers and scale down the containers- Auto Scaling of containers
+We need a tool that will ensure desired count of containers are always running in the cluster - > High Availability
+We need a tool that will  delete containers with old image and create containers with new Image -> Update Image for your Service
+
+CONTAINER ORCHESTION TOOLS
+
+Docker swarm
+Kubernetes
+Openshift
+EKS - Elastic Kubernetes Service
+GKE - Google Kubernetes Engine
+AKS - Azure Kubernetes Service
+
+
+
+
+
+# hostname MANAGER
+# sudo su -
+
+# docker swarm init
+
+The current machine is now Leader machine
+
+# copy the token which will look like this:
+
+  docker swarm join --token SWMTKN-1-64dczervns37sw84jlb79fczskofbx9wh2x25vrv8x95s9o03m-75s49518smp5hxyyort6k8ing 172.31.41.114:2377
+
+
+Go to Worker1 and worker 2  VM on the lab
+
+# sudo su -
+
+Paste the token
+
+The machine will join the swarm cluster
+
+Go to manager node
+
+# docker node ls
+
+You will see all the 3 nodes part of cluster
+
+
+
+Demo 1: 
+
+Create a service that will create 6 replicas of the Image nginx
+The service will also distribute the replicas on the nodes of the Cluster 
+
+# docker service create --name mysvc --replicas 6 nginx
+
+# docker service ls
+
+# docker service ps mysvc
+
+
+Demo 2: Ensure that the desired count of replicas are always running in the cluster
+
+
+Go to any worker node, delete the replica
+
+# docker rm -f conatinerid
+
+
+On the manager node , check the service
+
+# docker service ls
+
+
+The desired count matches the current count
+
+Orchestration tool recreates a new replica to match current count and desired count.
+
+
+Scaling in the swarm cluster
+===================================
+If we have created a service and we want to increase the desired count of replicas or reduce the desired count of replicas  the we use the docker service scale command
+
+In docker swarm we cannot do autoscaling.
+
+Scale up command:
+
+# docker service scale mysvc=7
+
+Scale down:
+
+# docker service scale mysvc=2
+
+
+Delete the service , all the replicas also get deleted
+
+# docker service rm mysvc
+
+=========================================
+Demo 4:
+
+# docker service create --name mysvc --replicas 2 -p 8989:3000 sonal04/samplepyapp:v1
+
+#  docker service ls
+
+Now go to the browser of the machine and give
+
+http://localhost:8989
+
+you will see request been sent to any one of the container
