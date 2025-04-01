@@ -539,6 +539,7 @@ spec:
               cpu: 10m
 
 ---
+Service-hpa.yml
 
 apiVersion: v1
 kind: Service
@@ -555,6 +556,7 @@ spec:
 
 nginx-svc    ClusterIP   10.108.30.249   <none>        80/TCP    6s
 ---
+
 
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -579,7 +581,7 @@ Save the file
 
 # kubectl get all
 
-# Now launch the load generator pod -> open master terminal again
+# Now launch the load generator pod -> open master terminal again(to give traffic/load)
 
 # kubectl run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://Service-Internal-IP:80; done"
 
