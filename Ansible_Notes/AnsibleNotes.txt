@@ -310,6 +310,9 @@ Go to Worker node (AWS VM)
 
 Great job, the setup is complete
 
+Go to master node
+#ssh ansiuser@<ip add>   / ssh -i ansiuser@ip
+
 Inventory File:
 ------------------
 Inventory is a simple file which is updated by the ansible admin with hostnames or Ip address of host servers.
