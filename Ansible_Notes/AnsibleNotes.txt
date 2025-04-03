@@ -559,3 +559,28 @@ Docker Playbook:
     command: docker pull nginx
   - name: run the image
     command: docker run -d -P nginx
+
+
+-----------------------------------------------------------------------------------------
+Handler
+
+Sometimes you want a task to run only when a change is made on a machine. For example, you may want to restart a service if a task updates the configuration of that service, but not if the configuration is unchanged. Ansible uses handlers to address this use case. Handlers are tasks that only run when notified.
+
+- name: handlers in Ansible
+  hosts: webserver
+  become: true
+  tasks:
+  - name: Notify task for starting the service
+    command: echo "Service started"
+    notify: start multiple services
+  - name: Copy a file
+    copy: src=index.html dest=/tmp/index.html
+    notify: Print copy status
+  handlers:
+  - name: Print copy status
+    debug: msg="File copied successfully"
+  - name: start multiple services
+    service: name={{item}} state=restarted
+    loop:
+     - apache2
+     - docker
