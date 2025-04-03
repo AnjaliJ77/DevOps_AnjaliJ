@@ -64,7 +64,7 @@ It also supports cloud based infrastructure.
 Ansible Components:
 =============================
 
-Inventory: WHERE To Do the Changes
+1. Inventory: WHERE To Do the Changes
 ==============================
 
 Inventory is a simple file which is available by default in ansible
@@ -92,7 +92,7 @@ So we use the process of dynamically generate the inventory file
 In this case ansible will automatically compute the list of hostnames that are part of inventory
 
 =======================
-Modules: WHAT changes to do on host servers
+2. Modules: WHAT changes to do on host servers
 =======================
 
 Modules are nothing but python scripts(pre written code of ansible) that are pushed to host servers to make changes
@@ -112,7 +112,7 @@ We can also create our own modules using python.
 
 ====================================
 
-Ansible.cfg file
+3. Ansible.cfg file
 ==============================
 This file consists of parameters of ansible settings and configuration of ansible
 > defaults
@@ -125,7 +125,7 @@ You can create ansible.cfg file in any directory. Preferably in the directory wh
 
 
 
-Playbook
+4. Playbook
 ===================
 Ansible code for configuration changes is written in Playbook
 
