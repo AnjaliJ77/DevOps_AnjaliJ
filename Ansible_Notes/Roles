@@ -1,0 +1,20 @@
+Roles--------
+
+task>>main.yml
+
+# tasks file for nginx
+- name: Install Nginx and Docker
+  package: name={{item}} state=present
+  loop:
+    - nginx
+    - docker.io
+- name: Start service
+  service: name={{item}} stae=started
+  loop:
+    - nginx
+    - docker
+- name: Deploy HTML
+  copy: src=index.html dest={{dest_path}}
+  notify: restart nginx
+- name: Deploy nginx
+  command: docker run -d -P nginx
