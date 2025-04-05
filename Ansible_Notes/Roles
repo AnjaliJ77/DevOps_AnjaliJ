@@ -18,3 +18,22 @@ task>>main.yml
   notify: restart nginx
 - name: Deploy nginx
   command: docker run -d -P nginx
+
+
+Vars:
+
+dest_path: /var/www/html
+
+Hnadlers:
+-name: restart nginx
+service: name=nginx state=restarted
+
+
+
+Ansible.yml
+- name: Apply nginx role
+  hosts: webserver
+  become: yes
+
+  roles:
+    - nginx
