@@ -248,7 +248,7 @@ Save the file
 # terraform plan
 
 ==========================================
-Assignment:
+Assignment: Maps type
 
 
 variable "sg_ports" {
