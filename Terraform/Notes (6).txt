@@ -248,7 +248,7 @@ Save the file
 # terraform plan
 
 ==========================================
-Assignment: Maps type
+Assignment:Dynamic>  Maps type:  We can pass dif value for each key
 
 
 variable "sg_ports" {
