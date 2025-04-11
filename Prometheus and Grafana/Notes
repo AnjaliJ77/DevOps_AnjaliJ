@@ -69,9 +69,9 @@ Go to official pgae downloads Prometheus:
 # wget https://github.com/prometheus/prometheus/releases/download/v3.0.0/prometheus-3.0.0.linux-amd64.tar.gz
 
 # sudo tar -xvf prometheus-3.0.0.linux-amd64.tar.gz
-Move the configuration file and set the owner to the prometheus
-cd prometheus-2.47.2.linux-amd64
-sudo mv promotool /etc/prometheus
+Move the configuration file and set the owner to the prometheus(do ls based on version run below cmd)
+cd prometheus-2.47.2.linux-amd64 
+sudo mv promtool /etc/prometheus
 sudo mv prometheus.yml /etc/prometheus
 sudo chown -R prometheus:prometheus /etc/prometheus
 Move the binaries and set the owner:
@@ -79,6 +79,7 @@ sudo mv prometheus /usr/local/bin/
 sudo chown prometheus:prometheus /usr/local/bin/prometheus
 Create the service file using below command:
 sudo nano /etc/systemd/system/prometheus.service
+
 [Unit]
 Description=Prometheus
 Wants=network-online.target
