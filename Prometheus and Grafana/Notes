@@ -52,7 +52,7 @@ Some of the key attributes that are monitored include:
 
 To install and configure Prometheus and Grafana as monitoring and visualization tools, you can follow the steps below:
 
-Create a system user for Prometheus using below commnds:
+Create a system user for Prometheus using below commnds:-----------------------(installation of prometheus)
 sudo useradd --no-create-home --shell /bin/false prometheus
 
 Create the directories in which we will be storing our configuration files and libraries:
@@ -106,7 +106,12 @@ sudo systemctl enable prometheus
 sudo systemctl status prometheus
 Now access Prometehus in your browser
 <server-ip>:9090
+--------------------------------------------------------------------------------------
+
+
 Step #2:Install Node Exporter on Ubuntu 22.04 LTS
+
+
 # wget https://github.com/prometheus/node_exporter/releases/download/v1.8.2/node_exporter-1.8.2.linux-amd64.tar.gz
 # sudo tar xvfz node_exporter-*.*-amd64.tar.gz
 
@@ -115,8 +120,10 @@ sudo mv node_exporter-*.*-amd64/node_exporter /usr/local/bin/
 
 Create a node_exporter user to run the node exporter service
 sudo useradd -rs /bin/false node_exporter
+
 Create a Custom Node Exporter Service
-sudo nano /etc/systemd/system/node_exporter.service
+sudo nano /etc/systemd/system/node_exporter.service       (nano or vi)enter below script inside the file
+
 [Unit]
 
 Description=Node Exporter
@@ -139,6 +146,8 @@ ExecStart=/usr/local/bin/node_exporter
 
 [Install]
 WantedBy=multi-user.target
+
+
 =======================
 Reload the systemd
 sudo systemctl daemon-reload
@@ -147,21 +156,28 @@ To Start, enable node exporter:
 sudo systemctl enable node_exporter
 sudo systemctl start node_exporter
 sudo systemctl status node_exporter
-Lets update our configuration file using below command:
-sudo nano /etc/prometheus/prometheus.yml
+
+------------------------On prometheus server
+
+Lets update our configuration file using below command:(at last add below cmd)
+sudo vim /etc/prometheus/prometheus.yml
 - job_name: 'Node_Exporter'
 
-    scrape_interval: 5s
+    scrape_interval: 5s(dont include)
 
     static_configs:
 
-      - targets: ['<Server_IP_of_Node_Exporter_Machine>:9100']
+      - targets: ['Server_Pub_IP_of_Node_Exporter_Machine:9100']
 
-Save the file
+
+---------------Save the file------------------
 
 After changes any configuration file we need to restart our prometheus
+
 sudo systemctl restart prometheus.service
 
+
+------------------------------------------------------------------------------------------------------------------------------
 Step #3:Install Grafana on Ubuntu 22.04 LTS
 Download the Grafana GPG key with wget, then pipe the output to apt-key. This will add the key to your APT installation’s list of trusted keys, which will allow you to download and verify the GPG-signed Grafana package:
 
