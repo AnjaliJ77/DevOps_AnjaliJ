@@ -64,7 +64,7 @@ You need to inside /tmp :
 cd /tmp/
 Go to official pgae downloads Prometheus:
 
-https://prometheus.io/download/#prometheus
+------https://prometheus.io/download/#prometheus
 
 # wget https://github.com/prometheus/prometheus/releases/download/v3.0.0/prometheus-3.0.0.linux-amd64.tar.gz
 
