@@ -356,6 +356,7 @@ Install helm
 helm install grafana grafana/grafana
 
 
+take the public ip of the masternode and nodeport number
 
 
 Username is admin and get password by running below command:
