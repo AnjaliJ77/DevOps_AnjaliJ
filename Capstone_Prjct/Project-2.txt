@@ -277,6 +277,8 @@ tools{
 Save the job and run the pipleine 
 
 You image should be in the docker hub 
+
+above sonal104 name we can change our name and for above pwd and cred set up use syntax in jenkins
 ==================================================
 Setup Test server 
 
