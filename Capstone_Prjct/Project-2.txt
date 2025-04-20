@@ -405,6 +405,9 @@ tools{
     
 }
 
+
+
+above sonal104 name we can change our name and for above pwd and cred set up use syntax in jenkins
 =====================================
 Create a Kubernetes cluster of your choice 
 
