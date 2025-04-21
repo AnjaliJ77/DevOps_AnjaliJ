@@ -339,7 +339,7 @@ create jenkins root directory
 
 # chmod -R 777 /tmp/jenkinsdir 
 
-#  chmod -R 777 /var/run/docker.sock
+#  chmod -R 777 /var/run/docker.sock                 (root:On test server)
 ============================================
 
 Connect test server to Jenkins as agent 
