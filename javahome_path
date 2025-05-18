@@ -1,0 +1,9 @@
+Using this command we can do the java home path
+
+1. echo 'export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which javac))))'
+| sudo tee -a /etc/profile
+2. echo 'export PATH=$JAVA_HOME/bin:$PATH' | sudo tee -a /etc/profile
+3. source /etc/profile
+
+
+Verify JAVA_HOME by “echo $JAVA_HOME” command
